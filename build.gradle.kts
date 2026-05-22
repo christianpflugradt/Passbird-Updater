@@ -11,6 +11,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+}
+
 java.sourceCompatibility = JavaVersion.VERSION_17
 group = "de.pflugradts"
 
