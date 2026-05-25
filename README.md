@@ -18,6 +18,14 @@ The script [update-and-run-passbird.sh](update-and-run-passbird.sh) can be used 
 
 To detect local versions of Passbird, Passbird Updater requires the Passbird jar directory as an argument. In that directory Passbird Updater will save the latest version `x.y.z` or `x.y.z-dev.YYYYMMDD.N` as `passbird-x.y.z.jar` or `passbird-x.y.z-dev.YYYYMMDD.N.jar`. If the file already exists locally it won't be downloaded again. The latest version will then be copied to `passbird.jar`, which you may use to start Passbird itself.
 
+The command line syntax is:
+
+```shell
+java -jar passbird-updater.jar <passbird-jar-directory> [versions-to-keep] [--channel stable|dev]
+```
+
+The Passbird jar directory must be the first argument. The release channel must be passed as `--channel dev` or `--channel stable`, not as a bare positional value such as `dev`.
+
 The updater defaults to the `stable` channel. On that channel it queries the latest public release from the [Passbird GitHub Releases page](https://github.com/christianpflugradt/Passbird/releases), reads the release version and `passbird.jar` asset URL from the GitHub API, downloads the jar, and verifies it against the release asset digest published by GitHub before updating the local `passbird.jar`.
 
 As an optional parameter you may specify the number of version to keep. If an update is available and has been successfully downloaded, Passbird Updater will remove old local versions of Passbird. If no value is passed the number of versions to keep defaults to 3, so if 5 versions of Passbird are present locally after downloading the latest, the 2 oldest versions will be deleted.
