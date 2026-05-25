@@ -90,6 +90,7 @@ class PassbirdUpdaterTest {
         Files.createFile(directory.resolve("passbird-6.3.0-dev.20260525.1.jar"))
         Files.createFile(directory.resolve("passbird-6.4.0.jar"))
         Files.createFile(directory.resolve("passbird.jar"))
+        Files.createFile(directory.resolve("passbird-updater.jar"))
 
         val jars = findLocalJars(directory.toString())
 

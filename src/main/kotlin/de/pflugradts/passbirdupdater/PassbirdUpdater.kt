@@ -293,7 +293,10 @@ fun messageDigestName(algorithm: String) = when (algorithm.lowercase(Locale.ROOT
 fun findLocalJars(passbirdDirectory: String): List<String> = Files.find(Paths.get(passbirdDirectory), 1, { path, _ ->
     PASSBIRD_JAR_PATTERN.matches(path.fileName.toString())
 }).use { paths ->
-    paths.map { it.fileName.toString() }.toList().sortedBy(::toPassbirdVersion)
+    paths.map { it.fileName.toString() }.toList()
+        .mapNotNull { fileName -> toPassbirdVersionOrNull(fileName)?.let { fileName to it } }
+        .sortedBy { it.second }
+        .map { it.first }
 }
 fun deleteOldJars(passbirdDirectory: String, jars: List<String>, versionsToKeep: Int) = jars.let {
     if (it.size > versionsToKeep) {
@@ -309,7 +312,8 @@ fun JsonObject.requiredString(key: String) = this[key]?.jsonPrimitive?.content ?
 fun JsonObject.requiredDigest(key: String): ReleaseDigest = requiredString(key).split(':', limit = 2).takeIf { it.size == 2 }?.let {
     ReleaseDigest(algorithm = it[0], value = it[1])
 } ?: error("Invalid release metadata digest for '$key'")
-fun toPassbirdVersion(fileName: String) = PASSBIRD_JAR_PATTERN.matchEntire(fileName)?.groupValues?.get(1)?.let(::parsePassbirdVersion)
+fun toPassbirdVersionOrNull(fileName: String) = PASSBIRD_JAR_PATTERN.matchEntire(fileName)?.groupValues?.get(1)?.let(::parsePassbirdVersion)
+fun toPassbirdVersion(fileName: String) = toPassbirdVersionOrNull(fileName)
     ?: error("Passbird jar filename does not contain a supported version: $fileName")
 fun printwt(text: String) = print("$TAB$text")
 fun printlnwt(text: String) = printwt("$text\n")
