@@ -46,7 +46,7 @@ java -jar passbird-updater.jar /opt/passbird/ --channel dev
 
 # How to update the updater
 
-Passbird Updater itself is not versioned and always keeps the same jar file name `passbird-updater.jar`. On startup it checks the latest published Passbird Updater release metadata on GitHub, compares the published asset digest with the checksum of the currently running local jar file, and if they differ it prints a direct download link to the newer updater release.
+Passbird Updater itself is not versioned and always keeps the same jar file name `passbird-updater.jar`. On startup it checks the latest published Passbird Updater release metadata on GitHub, compares the published asset digest with the checksum of the currently running local jar file, and if they differ it prints a short manual-update notice together with a direct download link to the newer updater release.
 
 This check does not download the remote updater jar file. It only reads GitHub release metadata and compares it with the checksum of the local jar file in use.
 

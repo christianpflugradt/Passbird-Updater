@@ -158,7 +158,8 @@ fun announceUpdaterUpdateIfAvailable() = runCatching {
     retrieveLatestUpdaterRelease().takeIf { latestRelease ->
         currentJarFile()?.let { checksum(it, latestRelease.digest.algorithm) != latestRelease.digest.value } ?: false
     }?.let { latestRelease ->
-        printlnwt("A new Passbird Updater version is available: ${latestRelease.downloadUrl}")
+        printlnwt("A new Passbird Updater version is available!")
+        printlnwt("Please download it manually: ${latestRelease.downloadUrl}\n")
     }
 }
 
