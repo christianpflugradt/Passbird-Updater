@@ -6,7 +6,6 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.BufferedInputStream
-import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -23,7 +22,10 @@ const val PASSBIRD_REPOSITORY = "christianpflugradt/Passbird"
 const val PASSBIRD_RELEASES_URL = "https://github.com/$PASSBIRD_REPOSITORY/releases"
 const val PASSBIRD_RELEASES_API_URL = "https://api.github.com/repos/$PASSBIRD_REPOSITORY/releases/latest"
 const val PASSBIRD_RELEASE_ASSET = "passbird.jar"
-const val PASSBIRD_UPDATER_REPOSITORY_URL = "https://github.com/christianpflugradt/Passbird-Updater"
+const val PASSBIRD_UPDATER_REPOSITORY = "christianpflugradt/Passbird-Updater"
+const val PASSBIRD_UPDATER_REPOSITORY_URL = "https://github.com/$PASSBIRD_UPDATER_REPOSITORY"
+const val PASSBIRD_UPDATER_RELEASES_API_URL = "https://api.github.com/repos/$PASSBIRD_UPDATER_REPOSITORY/releases/latest"
+const val PASSBIRD_UPDATER_RELEASE_ASSET = "passbird-updater.jar"
 val PASSBIRD_JAR_PATTERN = """passbird-(\d+)\.(\d+)\.(\d+)\.jar""".toRegex()
 
 const val LOGO_START = """
@@ -60,8 +62,11 @@ ${TAB}chirp chirirp    >' )
 $TAB                 ( ( \
 """
 
+object PassbirdUpdaterRuntime
+
 data class ReleaseDigest(val algorithm: String, val value: String)
 data class LatestRelease(val version: String, val downloadUrl: String, val digest: ReleaseDigest)
+data class UpdaterRelease(val downloadUrl: String, val digest: ReleaseDigest)
 data class SemanticVersion(val major: Int, val minor: Int, val patch: Int) : Comparable<SemanticVersion> {
     override fun compareTo(other: SemanticVersion) = compareValuesBy(this, other, SemanticVersion::major, SemanticVersion::minor, SemanticVersion::patch)
 }
@@ -72,6 +77,7 @@ fun main(args: Array<String>) {
     val passbirdDirectory = args[0]
     println(LOGO_START)
     println(DISCLAIMER)
+    announceUpdaterUpdateIfAvailable()
     printlnwt("received passbird directory: $passbirdDirectory")
     printwt("determining latest version... ")
     try {
@@ -108,6 +114,14 @@ fun main(args: Array<String>) {
     printlnwt(LOGO_END)
 }
 
+fun announceUpdaterUpdateIfAvailable() = runCatching {
+    retrieveLatestUpdaterRelease().takeIf { latestRelease ->
+        currentJarFile()?.let { checksum(it, latestRelease.digest.algorithm) != latestRelease.digest.value } ?: false
+    }?.let { latestRelease ->
+        printlnwt("A new Passbird Updater version is available: ${latestRelease.downloadUrl}")
+    }
+}
+
 fun checkPassbirdDirectory(args: Array<String>) = Paths.get(args.getOrElse(0) {
     printlnwt("Passbird directory not specified!")
     printlnwt("Please pass the path to Passbird jar directory to Passbird Updater.\n")
@@ -120,17 +134,28 @@ fun checkPassbirdDirectory(args: Array<String>) = Paths.get(args.getOrElse(0) {
         exitProcess(1)
     }
 }
-fun urlAsStream(url: String) = BufferedInputStream(URL(url).openConnection().apply {
+fun urlAsStream(url: String) = BufferedInputStream(java.net.URI.create(url).toURL().openConnection().apply {
     setRequestProperty("Accept", "application/vnd.github+json")
     setRequestProperty("User-Agent", "Passbird-Updater")
     setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
 }.getInputStream())
 fun urlAsString(url: String) = urlAsStream(url).use { it.readAllBytes().toString(UTF_8) }
+fun currentJarFile() = runCatching {
+    Paths.get(PassbirdUpdaterRuntime::class.java.protectionDomain.codeSource.location.toURI())
+}.getOrNull()?.takeIf(Files::isRegularFile)
 fun retrieveLatestRelease(): LatestRelease = Json.parseToJsonElement(urlAsString(PASSBIRD_RELEASES_API_URL)).jsonObject.let { release ->
     val asset = release.requiredArray("assets").firstOrNull { it.requiredString("name") == PASSBIRD_RELEASE_ASSET }
         ?: error("Passbird release asset '$PASSBIRD_RELEASE_ASSET' was not found at $PASSBIRD_RELEASES_URL")
     LatestRelease(
         version = release.requiredString("tag_name"),
+        downloadUrl = asset.requiredString("browser_download_url"),
+        digest = asset.requiredDigest("digest"),
+    )
+}
+fun retrieveLatestUpdaterRelease(): UpdaterRelease = Json.parseToJsonElement(urlAsString(PASSBIRD_UPDATER_RELEASES_API_URL)).jsonObject.let { release ->
+    val asset = release.requiredArray("assets").firstOrNull { it.requiredString("name") == PASSBIRD_UPDATER_RELEASE_ASSET }
+        ?: error("Passbird Updater release asset '$PASSBIRD_UPDATER_RELEASE_ASSET' was not found at $PASSBIRD_UPDATER_REPOSITORY_URL")
+    UpdaterRelease(
         downloadUrl = asset.requiredString("browser_download_url"),
         digest = asset.requiredDigest("digest"),
     )

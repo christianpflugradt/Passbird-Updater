@@ -30,12 +30,16 @@ java -jar passbird-updater.jar /opt/passbird/ 4
 
 # How to update the updater
 
-Passbird Updater itself is designed not to be updated. Hence, it is not versioned. I can imagine only three likely reasons Passbird Updater itself would be updated:
+Passbird Updater itself is not versioned and always keeps the same jar file name `passbird-updater.jar`. On startup it checks the latest published Passbird Updater release metadata on GitHub, compares the published asset digest with the checksum of the currently running local jar file, and if they differ it prints a direct download link to the newer updater release.
+
+This check does not download the remote updater jar file. It only reads GitHub release metadata and compares it with the checksum of the local jar file in use.
+
+I can imagine only three likely reasons Passbird Updater itself would be updated:
 1. Passbird releases move away from GitHub Releases
 2. Passbird downloads are not provided as platform independent jar files anymore
 3. Passbird Updater contains a bug that should be fixed
 
-In all three cases respectively if you are affected by the bug, your instance of Passbird Updater will no longer work. If that is the case, visit this repository, retrieve the latest version of Passbird Updater or open an issue here to get support.
+In all three cases respectively if you are affected by the bug, your instance of Passbird Updater may need to be replaced manually. If that is the case, use the link printed by Passbird Updater, visit this repository, retrieve the latest version of Passbird Updater or open an issue here to get support.
 
 # Why it is not part of Passbird
 
