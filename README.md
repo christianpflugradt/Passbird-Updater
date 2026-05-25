@@ -2,7 +2,7 @@
 
 Passbird Updater automatically downloads the latest version of [Passbird](https://github.com/christianpflugradt/Passbird/releases).
 
-As of May 22, 2026, Passbird releases are published via GitHub Releases instead of the former website download location. This updater now uses GitHub release metadata and downloads the `passbird.jar` release asset from the latest public Passbird release.
+As of May 22, 2026, Passbird releases are published via GitHub Releases instead of the former website download location. This updater now uses GitHub release metadata and downloads the `passbird.jar` release asset from the latest public Passbird release by default.
 
 This repository contains the updater source code. Build the updater jar locally with:
 
@@ -16,16 +16,24 @@ The script [update-and-run-passbird.sh](update-and-run-passbird.sh) can be used 
 
 # How it works
 
-To detect local versions of Passbird, Passbird Updater requires the Passbird jar directory as an argument. In that directory Passbird Updater will save the latest version `x.y.z` as `passbird-x.y.z.jar`. If the file already exists locally it won't be downloaded again. The latest version will then be copied to `passbird.jar`, which you may use to start Passbird itself.
+To detect local versions of Passbird, Passbird Updater requires the Passbird jar directory as an argument. In that directory Passbird Updater will save the latest version `x.y.z` or `x.y.z-dev.YYYYMMDD.N` as `passbird-x.y.z.jar` or `passbird-x.y.z-dev.YYYYMMDD.N.jar`. If the file already exists locally it won't be downloaded again. The latest version will then be copied to `passbird.jar`, which you may use to start Passbird itself.
 
-The updater queries the latest public release from the [Passbird GitHub Releases page](https://github.com/christianpflugradt/Passbird/releases), reads the release version and `passbird.jar` asset URL from the GitHub API, downloads the jar, and verifies it against the release asset digest published by GitHub before updating the local `passbird.jar`.
+The updater defaults to the `stable` channel. On that channel it queries the latest public release from the [Passbird GitHub Releases page](https://github.com/christianpflugradt/Passbird/releases), reads the release version and `passbird.jar` asset URL from the GitHub API, downloads the jar, and verifies it against the release asset digest published by GitHub before updating the local `passbird.jar`.
 
-As an optional second parameter you may specify the number of version to keep. If an update is available and has been successfully downloaded, Passbird Updater will remove old local versions of Passbird. If no value is passed the number of versions to keep defaults to 3, so if 5 versions of Passbird are present locally after downloading the latest, the 2 oldest versions will be deleted.
+As an optional parameter you may specify the number of version to keep. If an update is available and has been successfully downloaded, Passbird Updater will remove old local versions of Passbird. If no value is passed the number of versions to keep defaults to 3, so if 5 versions of Passbird are present locally after downloading the latest, the 2 oldest versions will be deleted.
+
+As another optional parameter you may pass `--channel dev` to opt into development prereleases. Development prereleases use versions such as `6.4.0-dev.20260525.1` and are not selected unless the `dev` channel is requested explicitly.
 
 The following example for Passbird Updater assumes that `passbird.jar` is located in `/opt/passbird/` and the last `4` versions of Passbird should be kept:
 
 ```shell
 java -jar passbird-updater.jar /opt/passbird/ 4
+```
+
+The following example opts into development prereleases while keeping the default number of local versions:
+
+```shell
+java -jar passbird-updater.jar /opt/passbird/ --channel dev
 ```
 
 # How to update the updater

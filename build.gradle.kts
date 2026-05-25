@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    testImplementation(kotlin("test"))
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
@@ -34,4 +35,8 @@ tasks.withType<KotlinCompile>().configureEach {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "17"
     }
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
