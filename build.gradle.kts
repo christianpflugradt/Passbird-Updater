@@ -5,7 +5,7 @@ plugins {
     application
     java
     jacoco
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.25"
 }
 
 repositories {
