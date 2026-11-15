@@ -46,17 +46,21 @@ java -jar passbird-updater.jar /opt/passbird/ --channel dev
 
 # How to update the updater
 
-Passbird Updater is deliberately small and its behavior rarely changes. You do not need to update it regularly: an installed updater keeps working as long as Passbird is published as `passbird.jar` on GitHub Releases. A new updater release appears only when something changes for users, which is expected to be rare:
+**You do not need to keep Passbird Updater up to date.** It is deliberately tiny, does one job and its behavior rarely changes. An installed updater keeps working as long as Passbird is published as `passbird.jar` on GitHub Releases.
+
+The updater has no third-party libraries. It reads the release metadata of GitHub with a small parser of its own and relies on the Java runtime you start it with for HTTPS, checksums and file handling. The jar only bundles the Kotlin standard library. Keeping your Java runtime up to date matters far more for security than replacing the updater jar.
+
+A new updater release is published when something changes for users, which is expected to be rare:
 
 1. Passbird releases move away from GitHub Releases.
 2. Passbird downloads are not provided as platform independent jar files anymore.
 3. Passbird Updater contains a bug or a security issue that should be fixed.
 
-The release notes state which of these applies. If they do not describe a problem you are affected by, keep using your current copy.
+Releases are also cut automatically once a month if only build tooling or the Kotlin version was refreshed in between. Such a release changes nothing for you. Read the [release notes](https://github.com/christianpflugradt/Passbird-Updater/releases): if they do not describe a problem you are affected by, keep using your current copy. Replacing the jar every few years is reasonable hygiene, not a necessity. No software is free of vulnerabilities, but the attack surface of a tool this small is correspondingly small.
 
-Passbird Updater itself keeps the jar file name `passbird-updater.jar`. On startup it checks the latest published Passbird Updater release metadata on GitHub, compares the published asset digest with the checksum of the currently running local jar file, and if they differ it prints a short manual-update notice together with a direct download link. The notice only means that a newer release exists, not that you must update. The check does not download the remote jar; it only reads GitHub release metadata and compares it with the checksum of the local jar file in use.
+On startup Passbird Updater checks the latest published Passbird Updater release metadata on GitHub, compares the published asset digest with the checksum of the currently running local jar file, and if they differ it prints a short manual-update notice together with a direct download link. The notice only means that a newer release exists, not that you must update. The check does not download the remote jar; it only reads GitHub release metadata and compares it with the checksum of the local jar file in use.
 
-If you are affected by a fixed problem, replace your copy manually: use the link printed by Passbird Updater, visit this repository, retrieve the latest release, or open an issue here to get support.
+To replace your copy, use the link printed by Passbird Updater or visit this repository and retrieve the latest release. Open an issue here to get support.
 
 # Why it is not part of Passbird
 
