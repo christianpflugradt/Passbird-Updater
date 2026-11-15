@@ -1,7 +1,5 @@
 package de.pflugradts.passbirdupdater
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
 import java.nio.file.Files
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -62,7 +60,7 @@ class PassbirdUpdaterTest {
 
     @Test
     fun `parseReleaseOrNull accepts prefixed dev tags`() {
-        val release = Json.parseToJsonElement(
+        val release = parseJsonObject(
             """
             {
               "tag_name": "dev-6.3.0-dev.20260525.2",
@@ -76,7 +74,7 @@ class PassbirdUpdaterTest {
               ]
             }
             """.trimIndent(),
-        ).jsonObject
+        )
 
         val parsedRelease = parseReleaseOrNull(release)
 

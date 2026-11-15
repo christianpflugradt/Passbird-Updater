@@ -1,11 +1,5 @@
 package de.pflugradts.passbirdupdater
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import java.io.BufferedInputStream
 import java.nio.file.Files
 import java.nio.file.Path
@@ -230,15 +224,14 @@ fun currentJarFile() = runCatching {
     Paths.get(PassbirdUpdaterRuntime::class.java.protectionDomain.codeSource.location.toURI())
 }.getOrNull()?.takeIf(Files::isRegularFile)
 fun retrieveLatestRelease(channel: ReleaseChannel) = when (channel) {
-    ReleaseChannel.STABLE -> parseRelease(Json.parseToJsonElement(urlAsString(PASSBIRD_RELEASES_API_URL)).jsonObject)
-    ReleaseChannel.DEV -> Json.parseToJsonElement(urlAsString(PASSBIRD_RELEASES_LIST_API_URL)).jsonArray
-        .map { it.jsonObject }
+    ReleaseChannel.STABLE -> parseRelease(parseJsonObject(urlAsString(PASSBIRD_RELEASES_API_URL)))
+    ReleaseChannel.DEV -> parseJsonObjects(urlAsString(PASSBIRD_RELEASES_LIST_API_URL))
         .mapNotNull(::parseReleaseOrNull)
         .maxByOrNull(PassbirdRelease::version)
         ?: error("No Passbird release with asset '$PASSBIRD_RELEASE_ASSET' was found at $PASSBIRD_RELEASES_URL")
 }
 
-fun retrieveLatestUpdaterRelease(): UpdaterRelease = Json.parseToJsonElement(urlAsString(PASSBIRD_UPDATER_RELEASES_API_URL)).jsonObject.let { release ->
+fun retrieveLatestUpdaterRelease(): UpdaterRelease = parseJsonObject(urlAsString(PASSBIRD_UPDATER_RELEASES_API_URL)).let { release ->
     val asset = release.requiredArray("assets").firstOrNull { it.requiredString("name") == PASSBIRD_UPDATER_RELEASE_ASSET }
         ?: error("Passbird Updater release asset '$PASSBIRD_UPDATER_RELEASE_ASSET' was not found at $PASSBIRD_UPDATER_REPOSITORY_URL")
     UpdaterRelease(
@@ -249,7 +242,7 @@ fun retrieveLatestUpdaterRelease(): UpdaterRelease = Json.parseToJsonElement(url
 fun parseRelease(release: JsonObject): PassbirdRelease = parseReleaseOrNull(release)
     ?: error("Passbird release asset '$PASSBIRD_RELEASE_ASSET' was not found at $PASSBIRD_RELEASES_URL")
 fun parseReleaseOrNull(release: JsonObject): PassbirdRelease? {
-    if (release["draft"]?.jsonPrimitive?.booleanOrNull == true) {
+    if (release["draft"] == true) {
         return null
     }
     val asset = release.requiredArray("assets").firstOrNull { it.requiredString("name") == PASSBIRD_RELEASE_ASSET } ?: return null
@@ -308,8 +301,9 @@ fun deleteOldJars(passbirdDirectory: String, jars: List<String>, versionsToKeep:
         }
     }
 }
-fun JsonObject.requiredArray(key: String) = this[key]?.jsonArray?.map { it.jsonObject } ?: error("Missing release metadata field '$key'")
-fun JsonObject.requiredString(key: String) = this[key]?.jsonPrimitive?.content ?: error("Missing release metadata field '$key'")
+fun JsonObject.requiredArray(key: String) = (this[key] as? List<*>)?.map { it.asJsonObject() ?: error("Invalid release metadata field '$key'") }
+    ?: error("Missing release metadata field '$key'")
+fun JsonObject.requiredString(key: String) = this[key] as? String ?: error("Missing release metadata field '$key'")
 fun JsonObject.requiredDigest(key: String): ReleaseDigest = requiredString(key).split(':', limit = 2).takeIf { it.size == 2 }?.let {
     ReleaseDigest(algorithm = it[0], value = it[1])
 } ?: error("Invalid release metadata digest for '$key'")
