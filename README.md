@@ -1,5 +1,9 @@
 # Passbird Updater #
 
+[![build](https://github.com/christianpflugradt/Passbird-Updater/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/christianpflugradt/Passbird-Updater/actions/workflows/ci.yml) [![release](https://img.shields.io/github/v/release/christianpflugradt/Passbird-Updater?display_name=tag&sort=semver)](https://github.com/christianpflugradt/Passbird-Updater/releases) [![license](https://img.shields.io/badge/license-Apache%202.0-3949ab.svg)](https://opensource.org/licenses/Apache-2.0)
+
+[![tests](https://christianpflugradt.github.io/badges-and-stuff/passbird-updater/tests.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![branch coverage](https://christianpflugradt.github.io/badges-and-stuff/passbird-updater/branch-coverage.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![instr. coverage](https://christianpflugradt.github.io/badges-and-stuff/passbird-updater/instruction-coverage.svg)](https://christianpflugradt.github.io/badges-and-stuff/) [![LOC](https://christianpflugradt.github.io/badges-and-stuff/passbird-updater/loc.svg)](https://christianpflugradt.github.io/badges-and-stuff/)
+
 Passbird Updater automatically downloads the latest version of [Passbird](https://github.com/christianpflugradt/Passbird/releases).
 
 As of May 22, 2026, Passbird releases are published via GitHub Releases instead of the former website download location. This updater now uses GitHub release metadata and downloads the `passbird.jar` release asset from the latest public Passbird release by default.
@@ -9,6 +13,8 @@ This repository contains the updater source code. Build the updater jar locally 
 ```shell
 ./gradlew jar
 ```
+
+The Statistics workflow runs the unit tests, measures their branch and instruction coverage with JaCoCo, counts the lines of production code in `src/main` with scc and sends the results to [badges-and-stuff](https://github.com/christianpflugradt/badges-and-stuff), which renders the badges above.
 
 # How to start
 

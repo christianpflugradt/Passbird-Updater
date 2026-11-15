@@ -4,6 +4,7 @@ plugins {
     idea
     application
     java
+    jacoco
     kotlin("jvm") version "1.9.22"
 }
 
@@ -38,4 +39,9 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports.xml.required.set(true)
 }
