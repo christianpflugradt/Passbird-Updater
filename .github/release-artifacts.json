@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "repository": "christianpflugradt/Passbird-Updater",
+  "workflow": ".github/workflows/release.yml",
+  "root": ".",
+  "targets": {
+    "ubuntu-24.04": [
+      "build/libs/passbird-updater.jar"
+    ]
+  }
+}

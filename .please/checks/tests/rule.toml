@@ -1,0 +1,9 @@
+id = "tests"
+name = "Tests"
+description = "Updater unit tests pass"
+run_at = ["pre-push", "check"]
+
+[check]
+command = "./gradlew test"
+timeout_seconds = 1800
+resource = "gradle"

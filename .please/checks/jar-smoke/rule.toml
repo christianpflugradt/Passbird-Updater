@@ -1,0 +1,9 @@
+id = "jar-smoke"
+name = "Jar smoke test"
+description = "The built updater jar starts and reports the missing Passbird directory"
+run_at = ["pre-push", "check", "release"]
+
+[check]
+command = "python3 -B @rule/smoke.py"
+timeout_seconds = 1800
+resource = "gradle"

@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+env:
+  MISE_AUTO_INSTALL: 'false' # Install tools explicitly before running tasks.
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Install project tools
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6
+      - name: Fetch locked dependencies
+        run: mise run setup
+      - name: Run Please Behave checks and applicable reviews
+        uses: please-behave/action@196e1d61f898e0cb77c58ab3dd6667f021321d5e # v1.3.0
+        with:
+          install: 'false'
+          sync: 'true'
+          execution-point: check
+          summary: 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quality-check
+          path: .please/reports/last.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
