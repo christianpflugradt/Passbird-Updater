@@ -38,6 +38,15 @@
       "automerge": true
     },
     {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "minimumReleaseAge": "14 days",
+      "matchPackageNames": [
+        "!please-behave/cli"
+      ]
+    },
+    {
       "description": "Updates that cannot change the released jar use ci so they do not trigger a release.",
       "matchManagers": ["github-actions", "gradle-wrapper", "mise", "npm", "custom.regex"],
       "semanticCommitType": "ci"
