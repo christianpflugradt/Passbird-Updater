@@ -1,0 +1,11 @@
+purpose: Keep the unit tests of the updater passing.
+problem: Faulty changes to the updater stay unnoticed until after a release.
+value: A change that breaks tested behavior is visible before it is pushed.
+conditions:
+  - statement: The Gradle test task completes successfully.
+    rationale: Gradle is the build tool of the Kotlin project and runs its tests.
+success_criteria:
+  - A failing test fails the rule and a passing suite passes it.
+out_of_scope:
+  - description: Python tests, which the python-tests rule covers.
+placement: Local, because the build tool belongs to this repository's technology stack.

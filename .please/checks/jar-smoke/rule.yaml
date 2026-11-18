@@ -1,0 +1,19 @@
+purpose: Verify that the built updater jar starts.
+problem: >-
+  Unit tests run against classes, not against the packaged jar. A jar that
+  compiles but does not start would only be noticed by users.
+value: The shipped artifact is known to start before it is pushed or released.
+conditions:
+  - statement: >-
+      The jar is built with ./gradlew jar and started without arguments. It
+      exits with status 1 and prints the missing Passbird directory message.
+    rationale: Reaching this error path shows that the jar is packaged and runnable.
+success_criteria:
+  - Exit status 1 with the expected message passes, anything else fails.
+  - A crash of the script or a timeout is an ERROR.
+out_of_scope:
+  - description: Downloading and updating, which needs the network.
+  - description: Comparing the jar checksum with the released asset.
+limitations:
+  - Only the start and the missing-directory error path are checked.
+placement: Local, because the jar exists only in this repository.

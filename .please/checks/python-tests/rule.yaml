@@ -1,0 +1,17 @@
+purpose: Keep the Python workflow scripts under test and the tests passing.
+problem: >-
+  The scripts under .github/scripts take part in release, dependency audit and
+  statistics. A defect in them would only show up when a workflow runs.
+value: Defects in the workflow scripts are visible before they are pushed.
+conditions:
+  - statement: Every test_*.py file in .github/scripts passes when run with unittest.
+    rationale: unittest belongs to the Python standard library and adds no dependency.
+success_criteria:
+  - A failing test fails the rule and a passing suite passes it.
+  - A crash of the runner is an ERROR.
+out_of_scope:
+  - description: Kotlin tests, which the tests rule covers.
+  - description: Formatting of the scripts, which the format-python rule covers.
+limitations:
+  - Only files named test_*.py in .github/scripts are found.
+placement: Local, because the scripts exist only in this repository.
