@@ -1,6 +1,6 @@
 id = "python-tests"
 name = "Python tests"
-description = "Python tests for Action scripts, workflow scripts and local rules pass"
+description = "Python tests for the workflow scripts pass"
 run_at = ["pre-push", "check"]
 
 [check]
