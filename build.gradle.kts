@@ -60,6 +60,8 @@ dependencyCheck {
             enabled.set(false)
         }
         assemblyEnabled = false
+        nodeEnabled = false
+        nodeAuditEnabled = false
         retirejs.enabled = false
     }
     data {
