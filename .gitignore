@@ -8,3 +8,4 @@ out/*
 .ruff_cache/
 node_modules/
 /release-evidence/
+/.dependency-check/

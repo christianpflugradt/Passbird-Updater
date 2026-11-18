@@ -7,6 +7,7 @@ plugins {
     java
     jacoco
     kotlin("jvm") version "2.4.21"
+    id("org.owasp.dependencycheck") version "13.0.0"
 }
 
 repositories {
@@ -46,4 +47,22 @@ tasks.withType<Test>().configureEach {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports.xml.required.set(true)
+}
+
+dependencyCheck {
+    scanConfigurations = listOf("runtimeClasspath")
+    failBuildOnCVSS = 11.0f
+    formats = listOf("HTML", "JSON")
+    nvd.apiKey = System.getenv("NVD_API_KEY")
+    analyzers.apply {
+        ossIndex.enabled = false
+        nexus {
+            enabled.set(false)
+        }
+        assemblyEnabled = false
+        retirejs.enabled = false
+    }
+    data {
+        directory = System.getenv("DEPENDENCY_CHECK_DATA_LOCATION") ?: ".dependency-check"
+    }
 }
