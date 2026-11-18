@@ -10,14 +10,15 @@ gitleaks = "8.30.1"
 gh = "2.103.3"
 ruff = "0.17.4"
 "aqua:boyter/scc" = "4.1.0"
+shfmt = "3.14.1"
 
 [tasks.setup]
 description = "Fetch locked npm and Gradle dependencies for CI and offline Git hooks"
 run = ["npm ci --ignore-scripts", "./gradlew classes testClasses"]
 
 [tasks.format]
-description = "Format Python sources; Kotlin has no formatter"
-run = "ruff format"
+description = "Format Python and shell sources; Kotlin has no formatter"
+run = ["ruff format", "git ls-files -z '*.sh' | xargs -0 -r shfmt -w"]
 
 [tasks.verify]
 description = "Run the deterministic Please Behave checks and stop at the first blocker"
