@@ -29,5 +29,6 @@ description = "Build the updater jar"
 run = "./gradlew jar"
 
 [tasks.release]
-description = "Start the Release workflow for remote main"
-run = "gh workflow run release.yml --ref main"
+description = "Wait for CI on main, then start the Release workflow; --follow watches the run"
+usage = 'flag "--follow" help="Watch the dispatched release run until it finishes"'
+run = 'python3 .github/scripts/start-release.py ${usage_follow:+--follow}'
