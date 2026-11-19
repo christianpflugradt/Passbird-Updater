@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: Release a patch version even if no commit would raise the version, to test the release process
+        type: boolean
+        default: false
   schedule:
     - cron: '17 4 1 * *' # Monthly; a run without releasable commits publishes nothing.
 
@@ -27,7 +32,7 @@ jobs:
     outputs:
       release: ${{ steps.plan.outputs.release }}
       version: ${{ steps.plan.outputs.version }}
-      source_sha: ${{ steps.plan.outputs.source_sha }}
+      source_sha: ${{ steps.plan.outputs.source-sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -38,12 +43,11 @@ jobs:
         uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         with:
           install_args: node
-      - run: npm ci --ignore-scripts
       - name: Plan next semantic release without publishing
         id: plan
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: npm run release:plan
+        uses: christianpflugradt/please-behave-governance/actions/release/plan@b228387979f8dbdc65a0c809a390ccaa3bfbae5c # updates/actions/release
+        with:
+          force: ${{ inputs.force }}
 
   release-readiness:
     name: Release Readiness
@@ -66,9 +70,9 @@ jobs:
           install_args: python java github:please-behave/cli
       - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6
       - name: Verify exact-source CI prerequisites
-        run: python3 .github/scripts/check-release-ci.py
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        uses: christianpflugradt/please-behave-governance/actions/release/check-ci@b228387979f8dbdc65a0c809a390ccaa3bfbae5c # updates/actions/release
+        with:
+          required-jobs: Check
       - name: Verify release readiness
         uses: please-behave/action@9a184e405e62a79154989de1e54c54869180751b # v1.5.0
         with:
@@ -109,10 +113,11 @@ jobs:
       - name: Build the release candidate jar
         run: ./gradlew jar
       - name: Record release candidate evidence
-        run: python3 .github/scripts/release-evidence.py record
-        env:
-          EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
-          RELEASE_TARGET: ${{ matrix.os }}
+        uses: christianpflugradt/please-behave-governance/actions/release/evidence@b228387979f8dbdc65a0c809a390ccaa3bfbae5c # updates/actions/release
+        with:
+          operation: record
+          version: ${{ needs.plan.outputs.version }}
+          target: ${{ matrix.os }}
       - name: Upload release candidate evidence
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -149,7 +154,6 @@ jobs:
         uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         with:
           install_args: python node
-      - run: npm ci --ignore-scripts
       - name: Download release candidate evidence
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
@@ -162,11 +166,13 @@ jobs:
           name: release-jar-${{ github.run_id }}-${{ github.run_attempt }}
           path: build/libs
       - name: Verify release candidate evidence
-        run: python3 .github/scripts/release-evidence.py verify
-        env:
-          EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+        uses: christianpflugradt/please-behave-governance/actions/release/evidence@b228387979f8dbdc65a0c809a390ccaa3bfbae5c # updates/actions/release
+        with:
+          operation: verify
+          version: ${{ needs.plan.outputs.version }}
       - name: Publish semantic release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          EXPECTED_RELEASE_VERSION: ${{ needs.plan.outputs.version }}
-        run: npm run release
+        uses: christianpflugradt/please-behave-governance/actions/release/publish@b228387979f8dbdc65a0c809a390ccaa3bfbae5c # updates/actions/release
+        with:
+          version: ${{ needs.plan.outputs.version }}
+          force: ${{ inputs.force }}
+          assets: build/libs/passbird-updater.jar

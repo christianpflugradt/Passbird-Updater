@@ -10,5 +10,5 @@ Passbird Updater is a small Kotlin command line tool that downloads the latest P
 - Git hooks are the validation gates: `pre-commit` checks conventions, `pre-push` runs the complete suite. Install them with `please sync --yes`. Run only focused tests such as `./gradlew test --tests '*PassbirdUpdaterTest*'` during development, never the whole suite by hand.
 - Commits follow Conventional Commits with scopes from `.please/commit-scopes.txt`. Releases are cut by the Release workflow through Semantic Release; never tag or publish by hand.
 - Pins of the governance revision and the Please Behave governor in `mise.toml` belong to Renovate. Do not bump them by hand.
-- Dependency vulnerabilities are audited by the daily `dependency-audit.yml` workflow (Dependency-Check for the runtime classpath, `npm audit` for the release tooling); never run `./gradlew dependencyCheckAnalyze` locally unless the maintainer asks.
+- Dependency vulnerabilities are audited by the daily `dependency-audit.yml` workflow (Dependency-Check for the runtime classpath); never run `./gradlew dependencyCheckAnalyze` locally unless the maintainer asks.
 - Tests stay offline and use mocked network responses.

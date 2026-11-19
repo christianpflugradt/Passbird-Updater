@@ -18,8 +18,8 @@ ruff = "0.17.4"
 shfmt = "3.14.1"
 
 [tasks.setup]
-description = "Fetch locked npm and Gradle dependencies for CI and offline Git hooks"
-run = ["npm ci --ignore-scripts", "./gradlew classes testClasses"]
+description = "Fetch locked Gradle dependencies for CI and offline Git hooks"
+run = "./gradlew classes testClasses"
 
 [tasks.format]
 description = "Format Python and shell sources; Kotlin has no formatter"
