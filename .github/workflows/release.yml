@@ -70,7 +70,7 @@ jobs:
       - name: Build the release candidate jar
         run: ./gradlew jar
       - name: Record release candidate evidence
-        uses: christianpflugradt/please-behave-governance/actions/release/evidence@bebfa9c1b717c64c49f677c0a2d2e4730d86515d # updates/actions/release
+        uses: christianpflugradt/please-behave-governance/actions/release/evidence@95293131bd2673933aa8b97348b90486e07e431e # updates/actions/release
         with:
           operation: record
           version: ${{ needs.plan.outputs.version }}
@@ -110,12 +110,12 @@ jobs:
           name: release-jar-${{ github.run_id }}-${{ github.run_attempt }}
           path: build/libs
       - name: Verify release candidate evidence
-        uses: christianpflugradt/please-behave-governance/actions/release/evidence@bebfa9c1b717c64c49f677c0a2d2e4730d86515d # updates/actions/release
+        uses: christianpflugradt/please-behave-governance/actions/release/evidence@95293131bd2673933aa8b97348b90486e07e431e # updates/actions/release
         with:
           operation: verify
           version: ${{ needs.plan.outputs.version }}
       - name: Publish semantic release
-        uses: christianpflugradt/please-behave-governance/actions/release/publish@bebfa9c1b717c64c49f677c0a2d2e4730d86515d # updates/actions/release
+        uses: christianpflugradt/please-behave-governance/actions/release/publish@95293131bd2673933aa8b97348b90486e07e431e # updates/actions/release
         with:
           version: ${{ needs.plan.outputs.version }}
           force: ${{ inputs.force }}
