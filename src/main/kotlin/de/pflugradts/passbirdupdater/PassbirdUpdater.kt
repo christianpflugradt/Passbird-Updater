@@ -254,7 +254,7 @@ fun parseReleaseOrNull(release: JsonObject): PassbirdRelease? {
     )
 }
 
-fun normalizeReleaseTag(tagName: String) = tagName.removePrefix("dev-")
+fun normalizeReleaseTag(tagName: String) = tagName.removePrefix("dev-").removePrefix("v")
 fun parsePassbirdVersion(version: String) = PASSBIRD_VERSION_PATTERN.matchEntire(version)?.destructured?.let { (major, minor, patch, date, sequence) ->
     PassbirdVersion(
         baseVersion = SemanticVersion(major.toInt(), minor.toInt(), patch.toInt()),

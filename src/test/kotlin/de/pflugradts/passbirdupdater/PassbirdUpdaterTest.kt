@@ -82,6 +82,28 @@ class PassbirdUpdaterTest {
     }
 
     @Test
+    fun `parseReleaseOrNull accepts stable tags with and without a v prefix`() {
+        fun release(tag: String) = parseJsonObject(
+            """
+            {
+              "tag_name": "$tag",
+              "draft": false,
+              "assets": [
+                {
+                  "name": "passbird.jar",
+                  "browser_download_url": "https://example.invalid/passbird.jar",
+                  "digest": "sha256:abc123"
+                }
+              ]
+            }
+            """.trimIndent(),
+        )
+
+        assertEquals("6.3.0", parseReleaseOrNull(release("v6.3.0"))?.version.toString())
+        assertEquals("6.3.0", parseReleaseOrNull(release("6.3.0"))?.version.toString())
+    }
+
+    @Test
     fun `findLocalJars sorts stable and dev files by release precedence`() {
         val directory = Files.createTempDirectory("passbird-updater-test")
         Files.createFile(directory.resolve("passbird-6.3.0.jar"))
