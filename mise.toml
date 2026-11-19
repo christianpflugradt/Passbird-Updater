@@ -1,3 +1,8 @@
+[task_config]
+includes = [
+  "git::https://github.com/christianpflugradt/please-behave-governance.git//mise-tasks/release?ref=2d45945ac920552b37bb569f1d28930e93dddfcd",
+]
+
 [tools]
 "github:please-behave/cli" = "0.16.0"
 java = "temurin-17"
@@ -27,8 +32,3 @@ run = "please run --at pre-push --checks-only --fail-fast"
 [tasks.build]
 description = "Build the updater jar"
 run = "./gradlew jar"
-
-[tasks.release]
-description = "Wait for CI on main, then start the Release workflow; --follow watches the run"
-usage = 'flag "--follow" help="Watch the dispatched release run until it finishes"'
-run = 'python3 .github/scripts/start-release.py ${usage_follow:+--follow}'
