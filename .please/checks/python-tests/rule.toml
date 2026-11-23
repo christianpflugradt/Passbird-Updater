@@ -1,4 +1,5 @@
 id = "python-tests"
+version = "1.0"
 name = "Python tests"
 description = "Python tests for the workflow scripts pass"
 run_at = ["pre-push", "check"]
