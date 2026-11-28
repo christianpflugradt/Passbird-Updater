@@ -1,0 +1,11 @@
+id: DEC-0005
+name: Scheduled Monthly Release
+context: >-
+  The owner does not want to decide after every change, whether by Renovate or by hand, whether a new
+  updater version should be released. Releases are never time-critical.
+decision: >-
+  A scheduler plans a release once a month. It publishes only when releasable commits exist since the
+  last release; otherwise nothing is published. A release can also be started manually.
+rationale: >-
+  A fixed rhythm removes the need to think about releases and keeps a content change from waiting
+  months for its release, while an unchanged project produces no needless release.

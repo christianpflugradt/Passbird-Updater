@@ -11,6 +11,7 @@ Passbird Updater downloads the latest release of [Passbird](https://github.com/c
 - **Tiny and stable.** It does one job, has no third-party libraries and is developed further only for substantial reasons ([DEC-0003](decisions/DEC-0003.yaml)). Installed copies keep working as long as Passbird is published as `passbird.jar` on GitHub Releases.
 - **Verify before trusting.** Nothing becomes `passbird.jar` without a matching checksum. The checksum is published by the same source as the jar, so it detects damaged or mismatching downloads, not a compromised release.
 - **The user stays in control.** The updater never replaces itself and only points to a newer release of itself ([DEC-0002](decisions/DEC-0002.yaml)).
+- **Released without effort.** Releasable changes are published by a monthly scheduler, never by a manual decision ([DEC-0005](decisions/DEC-0005.yaml)).
 - **Honest about failure.** A failed update is reported and ends with a non-zero exit status ([DEC-0004](decisions/DEC-0004.yaml)).
 
 ### What it is not

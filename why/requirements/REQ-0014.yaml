@@ -1,0 +1,12 @@
+id: REQ-0014
+name: Changes Reach a Release Without Manual Action
+area: distribution
+description: >-
+  Every change that is releasable is published in a release within a month without manual action,
+  and a month without releasable changes publishes no release.
+rationale: >-
+  Fixes must not wait for the owner to remember a release, and an unchanged updater needs no new version.
+decisions:
+  - DEC-0005
+test_exemption: >-
+  Verified by the schedule of the release workflow; no test can run a monthly scheduler.
