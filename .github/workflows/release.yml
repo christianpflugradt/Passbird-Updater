@@ -63,7 +63,7 @@ jobs:
         with:
           install_args: python java github:please-behave/cli
           experimental: true
-          version: 2026.11.11
+          version: 2026.11.12
       - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6
       - name: Build the release candidate jar
         run: ./gradlew jar
@@ -98,7 +98,7 @@ jobs:
         with:
           install_args: python node
           experimental: true
-          version: 2026.11.11
+          version: 2026.11.12
       - name: Verify release candidate evidence
         uses: christianpflugradt/repository-catalog/actions/release/evidence@74c1911d36c4f967b43040c5179e4ca5f6b0080b # updates/actions/release
         with:
