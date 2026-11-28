@@ -1,0 +1,11 @@
+id: REQ-0001
+name: Verified Jar Only
+area: integrity
+description: >-
+  A downloaded Passbird jar becomes passbird.jar only if its checksum equals the digest GitHub
+  publishes for the release asset; otherwise the jar is removed, passbird.jar stays unchanged and
+  the checksum mismatch is reported.
+rationale: >-
+  A damaged or mismatching download must never replace a working installation.
+decisions:
+  - DEC-0001

@@ -1,0 +1,11 @@
+id: REQ-0009
+name: Updater Notice
+area: update
+description: >-
+  At startup the updater prints a notice with a download link if the digest of the latest published
+  updater release differs from the checksum of the jar that is running. The notice never changes the
+  outcome of the run, and failing to obtain it is not reported.
+rationale: >-
+  Users learn of the rare updater releases without the notice ever blocking an update of Passbird.
+decisions:
+  - DEC-0002

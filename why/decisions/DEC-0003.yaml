@@ -1,0 +1,12 @@
+id: DEC-0003
+name: No Third-Party Libraries
+context: >-
+  The updater reads small JSON documents from the GitHub API, downloads a file over HTTPS and
+  verifies a checksum. Libraries exist for all of it.
+decision: >-
+  The runtime uses only the Java runtime and the Kotlin standard library. Release metadata is read
+  with a small JSON reader of the updater's own.
+rationale: >-
+  Every library enlarges the supply chain and the attack surface of a tool that downloads and
+  installs software. The updater is meant to need no maintenance, which a dependency-free runtime
+  supports. Keeping the Java runtime up to date matters more for security than the updater itself.

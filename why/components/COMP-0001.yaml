@@ -1,0 +1,15 @@
+id: COMP-0001
+name: Release Metadata Reader
+purpose: Reads GitHub release metadata from JSON text strictly and without a third-party library.
+scope:
+- Parses JSON documents into maps, lists and scalars and rejects malformed or excessively nested input.
+out_of_scope:
+- description: Interpreting release fields such as tags, assets and digests.
+  owner: COMP-0002
+must_not:
+- Accept duplicate object keys or content after the JSON value.
+files:
+- src/main/kotlin/de/pflugradts/passbirdupdater/Json.kt
+depends_on: []
+requirements:
+- REQ-0011

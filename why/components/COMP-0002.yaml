@@ -1,0 +1,30 @@
+id: COMP-0002
+name: Updater
+purpose: Brings passbird.jar up to date with the latest release of the selected channel.
+scope:
+- Parses arguments and the release channel.
+- Determines the latest release, downloads and verifies the jar, activates it and removes old versions.
+- Prints the progress, errors and the notice about newer updater releases.
+out_of_scope:
+- description: Parsing the JSON of release metadata.
+  owner: COMP-0001
+must_not:
+- Replace or download its own jar.
+- Replace passbird.jar with a jar that failed verification.
+files:
+- src/main/kotlin/de/pflugradts/passbirdupdater/PassbirdUpdater.kt
+depends_on:
+- COMP-0001
+requirements:
+- REQ-0001
+- REQ-0002
+- REQ-0003
+- REQ-0004
+- REQ-0005
+- REQ-0006
+- REQ-0007
+- REQ-0008
+- REQ-0009
+- REQ-0010
+- REQ-0012
+- REQ-0013

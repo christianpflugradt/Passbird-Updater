@@ -1,0 +1,8 @@
+id: REQ-0003
+name: Explicit Dev Channel
+area: interface
+description: >-
+  The updater uses the stable channel unless --channel dev is passed, and it rejects a bare channel
+  name as a positional argument, a repeated channel and a repeated number of versions to keep.
+rationale: >-
+  Development prereleases must never be installed by accident.

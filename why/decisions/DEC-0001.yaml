@@ -1,0 +1,12 @@
+id: DEC-0001
+name: Separate Project from Passbird
+context: >-
+  Passbird is 100% offline by design, but users want a comfortable way to obtain new releases.
+decision: >-
+  Updating is a project of its own. Passbird contains no update mechanism and the updater is not an
+  official part of it.
+rationale: >-
+  An update mechanism inside Passbird would end its offline guarantee. Keeping it apart lets users
+  who accept the trade-off use it and leaves Passbird untouched for everyone else. Users who update
+  manually are also more likely to notice a compromise than an automatic mechanism that attackers
+  can study, and a compromise reaches fewer users when updates are not installed immediately.

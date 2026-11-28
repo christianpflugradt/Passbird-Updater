@@ -1,0 +1,10 @@
+id: REQ-0007
+name: Failures Are Reported
+area: interface
+description: >-
+  A failure to determine, download or verify the latest release ends the run with a message and exit
+  status 1.
+rationale: >-
+  Callers must be able to tell a failed update from a successful or unnecessary one.
+decisions:
+  - DEC-0004

@@ -1,0 +1,9 @@
+id: REQ-0012
+name: Platform Independent
+area: interface
+description: >-
+  The updater runs on every operating system that provides Java 17 or later.
+rationale: >-
+  Passbird users run on different systems and should need nothing but Java.
+test_exemption: >-
+  The jar is platform independent bytecode; CI builds and starts it on Linux only.

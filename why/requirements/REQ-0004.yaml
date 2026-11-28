@@ -1,0 +1,9 @@
+id: REQ-0004
+name: Passbird Jar Reflects the Latest Release
+area: update
+description: >-
+  After a successful run passbird.jar is the verified latest release of the selected channel, also
+  when that version was already present locally.
+rationale: >-
+  Users start passbird.jar and expect it to match the channel they asked for, including after
+  switching from dev back to stable.

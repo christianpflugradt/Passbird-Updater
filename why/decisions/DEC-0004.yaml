@@ -1,0 +1,11 @@
+id: DEC-0004
+name: Failures End with a Non-Zero Exit Status
+context: >-
+  The updater used to report failures to download or verify a release as a message and to end with
+  status 0, so callers could not tell a failed update from a successful or unnecessary one.
+decision: >-
+  A failure to determine, download or verify the latest release ends the run with exit status 1 and
+  a message that explains it. Invalid arguments and a missing directory already did so.
+rationale: >-
+  Callers such as scripts need to know that no update happened. The provided start script does not
+  stop on a failing command, so it still starts the installed Passbird afterwards.

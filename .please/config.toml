@@ -38,6 +38,19 @@ git = "https://github.com/christianpflugradt/repository-catalog.git"
 path = "rulesets/releasable-open-source-software"
 ref = "690f75c72c064425ab52e9a1454dc9839b2cf7d9"
 
+[[imports]]
+git = "https://github.com/christianpflugradt/repository-catalog.git"
+path = "rulesets/why"
+ref = "690f75c72c064425ab52e9a1454dc9839b2cf7d9"
+
+[[imports]]
+git = "https://github.com/christianpflugradt/repository-catalog.git"
+path = "rulesets/why-components"
+ref = "690f75c72c064425ab52e9a1454dc9839b2cf7d9"
+
+[imports.rule_parameters.component-consistency]
+source_roots = "src/main"
+
 [[adapter_imports]]
 id = "gemini-flash-lite"
 git = "https://github.com/christianpflugradt/repository-catalog.git"

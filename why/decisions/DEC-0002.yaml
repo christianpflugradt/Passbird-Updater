@@ -1,0 +1,15 @@
+id: DEC-0002
+name: Manual Updates of the Updater
+context: >-
+  The updater is deliberately tiny, rarely changes and has a small attack surface. It could replace
+  itself the way it replaces Passbird. The checksum it verifies is published by the same source as
+  the file, so it detects damaged or mismatching downloads but not a compromised GitHub release.
+decision: >-
+  The updater never replaces itself. At startup it only points to a newer release of itself and
+  prints a download link. The notice stays, although it costs one more network request per run,
+  because releases are rare and users would otherwise never learn of them.
+rationale: >-
+  A manual update keeps a human checkpoint before new updater code runs and keeps the code small:
+  replacing a running jar is platform-dependent and needs rollback handling. A silent self-update
+  would also give a compromised release control over every later Passbird update. A rejected
+  alternative is leaving out the notice, which saves a request but hides rare releases.

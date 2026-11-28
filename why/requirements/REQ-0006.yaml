@@ -1,0 +1,9 @@
+id: REQ-0006
+name: Bounded Local Versions
+area: retention
+description: >-
+  After passbird.jar was updated, only the newest N local Passbird versions remain, dev and stable
+  counted together. N defaults to 3 and must be at least 1; a smaller number is rejected as an
+  invalid argument.
+rationale: >-
+  Old jars would otherwise accumulate, and the installed version must never be deleted.

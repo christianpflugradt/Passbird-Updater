@@ -1,0 +1,9 @@
+id: REQ-0002
+name: Latest Release per Channel
+area: update
+description: >-
+  The stable channel selects the latest public Passbird release; the dev channel selects the highest
+  version among all published releases that carry the passbird.jar asset, dev and stable alike, and
+  a dev release ranks above the stable release of the same base version.
+rationale: >-
+  Users on the dev channel want the newest build, which may be a stable release.

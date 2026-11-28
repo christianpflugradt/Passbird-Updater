@@ -1,0 +1,8 @@
+repository:
+  alias: passbird-updater
+  source: github:christianpflugradt/Passbird-Updater
+linked:
+  - alias: passbird
+    source: github:christianpflugradt/Passbird
+  - alias: badges-and-stuff
+    source: github:christianpflugradt/badges-and-stuff

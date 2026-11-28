@@ -1,0 +1,12 @@
+id: REQ-0010
+name: Updater Never Replaces Itself
+area: supply-chain
+description: >-
+  The updater never downloads or replaces its own jar.
+rationale: >-
+  New updater code must run only after the user has updated it manually.
+decisions:
+  - DEC-0002
+test_exemption: >-
+  No test can show the absence of a code path; verified by review of the code, which writes only
+  into the Passbird jar directory.

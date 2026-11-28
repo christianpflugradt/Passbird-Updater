@@ -1,0 +1,11 @@
+id: REQ-0011
+name: No Third-Party Libraries
+area: supply-chain
+description: >-
+  The jar bundles only the Kotlin standard library and uses no third-party library at runtime.
+rationale: >-
+  Each library would enlarge the supply chain of a tool that installs software.
+decisions:
+  - DEC-0003
+test_exemption: >-
+  Verified by the dependency audit of the runtime classpath, which runs daily.

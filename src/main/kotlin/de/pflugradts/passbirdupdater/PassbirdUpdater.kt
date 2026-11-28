@@ -114,6 +114,7 @@ fun main(args: Array<String>) {
     announceUpdaterUpdateIfAvailable()
     printlnwt("received passbird directory: $passbirdDirectory")
     printwt("determining latest version... ")
+    var failed = false
     try {
         val latestRelease = retrieveLatestRelease(options.channel)
         println(latestRelease.version)
@@ -124,28 +125,37 @@ fun main(args: Array<String>) {
             printwt("downloading version ${latestRelease.version}... ")
             downloadLatestJar(latestRelease, passbirdJarFile)
             println("done")
-            checksums(latestRelease, passbirdJarFile).let {
-                if (it.first == it.second) {
-                    Files.copy(passbirdJarFile, Paths.get(passbirdDirectory, "passbird.jar"), REPLACE_EXISTING)
-                    printlnwt("updated passbird.jar to latest version ${latestRelease.version}")
-                    deleteOldJars(passbirdDirectory, findLocalJars(passbirdDirectory), options.versionsToKeep)
-                } else {
-                    printlnwt("version ${latestRelease.version} doesn't have the expected checksum")
-                    printlnwt("expected checksum: ${it.first}")
-                    printlnwt("actual   checksum: ${it.second}")
-                    printwt("downloaded version ${latestRelease.version} will be removed... ")
-                    Files.delete(passbirdJarFile)
-                    println("done")
-                }
-            }
+        }
+        if (activateRelease(latestRelease, passbirdJarFile, passbirdDirectory)) {
+            deleteOldJars(passbirdDirectory, findLocalJars(passbirdDirectory), options.versionsToKeep)
+        } else {
+            failed = true
         }
     } catch (ex: Exception) {
+        failed = true
         printlnwt("Oops, something went wrong!\n")
         printlnwt("Exception class: ${ex.javaClass.name}")
         printlnwt("Exception message: ${ex.message}")
         println(GENERIC_ERROR)
     }
     printlnwt(LOGO_END)
+    if (failed) exitProcess(1)
+}
+
+fun activateRelease(release: PassbirdRelease, jarFile: Path, passbirdDirectory: String): Boolean = checksums(release, jarFile).let {
+    if (it.first == it.second) {
+        Files.copy(jarFile, Paths.get(passbirdDirectory, "passbird.jar"), REPLACE_EXISTING)
+        printlnwt("updated passbird.jar to latest version ${release.version}")
+        true
+    } else {
+        printlnwt("version ${release.version} doesn't have the expected checksum")
+        printlnwt("expected checksum: ${it.first}")
+        printlnwt("actual   checksum: ${it.second}")
+        printwt("downloaded version ${release.version} will be removed... ")
+        Files.delete(jarFile)
+        println("done")
+        false
+    }
 }
 
 fun announceUpdaterUpdateIfAvailable() = runCatching {
@@ -198,6 +208,9 @@ fun parseProgramOptions(args: List<String>): ProgramOptions {
                     throw IllegalArgumentException("The number of versions to keep may only be specified once.")
                 }
                 versionsToKeep = argument.toInt()
+                if (versionsToKeep < 1) {
+                    throw IllegalArgumentException("The number of versions to keep must be at least 1.")
+                }
                 versionsSpecified = true
                 index += 1
             }

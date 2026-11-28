@@ -1,0 +1,9 @@
+id: REQ-0013
+name: Fixed Jar Name
+area: distribution
+description: >-
+  The released updater jar is named passbird-updater.jar.
+rationale: >-
+  The update notice compares the checksum of the running jar with the released asset of that name.
+test_exemption: >-
+  Verified by the release artifact configuration and the jar smoke check, which start build/libs/passbird-updater.jar.

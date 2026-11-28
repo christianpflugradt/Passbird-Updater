@@ -1,0 +1,7 @@
+id: REQ-0005
+name: No Repeated Download
+area: update
+description: >-
+  A version that is already present locally is not downloaded again.
+rationale: >-
+  Repeated runs should cost no bandwidth for a jar that is already there.

@@ -1,0 +1,8 @@
+id: REQ-0008
+name: Passbird Directory Required
+area: interface
+description: >-
+  The updater requires the Passbird jar directory as its first argument and exits with status 1 and
+  an explanation if it is missing, inaccessible or not a directory.
+rationale: >-
+  Without it the updater cannot know where to install.
