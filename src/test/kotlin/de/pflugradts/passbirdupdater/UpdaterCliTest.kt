@@ -25,7 +25,7 @@ class UpdaterCliTest {
     private val install get() = Files.createDirectories(directory.resolve("install"))
     private val jar get() = Path.of(System.getProperty("passbird.test.jar"))
 
-    // REQ-0001, REQ-0002, REQ-0006, REQ-0009
+    // REQ-0001, REQ-0002, REQ-0004, REQ-0006, REQ-0009, REQ-0010
     @Test
     fun `default channel installs the verified public release and retains the latest three versions`() {
         fixture("stable.json", release("v6.4.0"))
@@ -144,7 +144,7 @@ class UpdaterCliTest {
         }
     }
 
-    // REQ-0007
+    // REQ-0007, REQ-0009
     @Test
     fun `failed download reports an error and preserves the installed jar`() {
         fixture("stable.json", release("v6.4.0"))
@@ -154,6 +154,7 @@ class UpdaterCliTest {
 
         assertEquals(1, result.status, result.output)
         assertContains(result.output, "Oops, something went wrong!")
+        assertFalse(result.output.contains("Passbird Updater version"), result.output)
         assertEquals(listOf(UPDATER_API, STABLE_API, DOWNLOAD_URL), result.requests)
         assertEquals(setOf("passbird.jar"), installedFiles())
         assertEquals("previous install", Files.readString(install.resolve("passbird.jar")))
