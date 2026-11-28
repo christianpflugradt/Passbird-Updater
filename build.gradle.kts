@@ -44,6 +44,11 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+tasks.test {
+    inputs.files(tasks.jar)
+    systemProperty("passbird.test.jar", tasks.jar.flatMap { it.archiveFile }.get().asFile.absolutePath)
+}
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports.xml.required.set(true)

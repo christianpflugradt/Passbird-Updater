@@ -14,7 +14,7 @@ This repository contains the updater source code. Build the updater jar locally 
 ./gradlew jar
 ```
 
-The Statistics workflow runs the unit tests, measures their branch and instruction coverage with JaCoCo, counts the lines of production code in `src/main` with scc and sends the results to [badges-and-stuff](https://github.com/christianpflugradt/badges-and-stuff), which renders the badges above.
+The Statistics workflow runs the test suite, measures its branch and instruction coverage with JaCoCo, counts the lines of production code in `src/main` with scc and sends the results to [badges-and-stuff](https://github.com/christianpflugradt/badges-and-stuff), which renders the badges above.
 
 This repository documents its requirements, decisions and components in [why](why/README.md).
 

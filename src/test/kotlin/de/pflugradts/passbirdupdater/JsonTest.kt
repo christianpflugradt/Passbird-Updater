@@ -1,6 +1,8 @@
 package de.pflugradts.passbirdupdater
 
+import java.math.BigDecimal
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -19,11 +21,12 @@ class JsonTest {
         assertEquals(2, result.requiredArray("assets").size)
     }
 
+    // COMP-0001
     @Test
     fun `parseJson decodes string escapes`() {
-        val result = parseJsonObject("""{"text": "a\"b\\c\/d\n\t\u00e4\u20AC"}""")
+        val result = parseJsonObject("""{"text": "a\"b\\c\/d\b\f\n\r\t\u00e4\u20AC"}""")
 
-        assertEquals("a\"b\\c/d\n\tä€", result["text"])
+        assertEquals("a\"b\\c/d\b\u000C\n\r\tä€", result["text"])
     }
 
     @Test
@@ -57,6 +60,30 @@ class JsonTest {
     @Test
     fun `parseJson rejects excessive nesting`() {
         assertFailsWith<IllegalStateException> { parseJson("[".repeat(100) + "]".repeat(100)) }
+    }
+
+    // COMP-0001
+    @Test
+    fun `parseJson preserves negative and fractional numbers without rounding`() {
+        assertEquals(BigDecimal("-1.25E-8"), parseJson("-1.25e-8"))
+        assertEquals(BigDecimal("9007199254740993"), parseJson("9007199254740993"))
+    }
+
+    // COMP-0001
+    @Test
+    fun `parseJson reports why damaged release metadata cannot be read`() {
+        val cases = mapOf(
+            """{"release":"unfinished""" to "Unterminated string",
+            "\"unfinished\\" to "Unterminated escape sequence",
+            "\"\\u12" to "Invalid unicode escape",
+            """{"draft":false "assets":[]}""" to "Expected ',' or '}'",
+            """[{"tag_name":"v1.0.0"} {"tag_name":"v2.0.0"}]""" to "Expected ',' or ']'",
+            "-" to "Invalid number",
+        )
+
+        for ((document, diagnostic) in cases) {
+            assertContains(assertFailsWith<IllegalStateException> { parseJson(document) }.message.orEmpty(), diagnostic)
+        }
     }
 
     @Test
